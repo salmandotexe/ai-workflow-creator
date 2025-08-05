@@ -1,0 +1,6 @@
+fastapi
+uvicorn[standard]
+celery[py-mongo,rabbitmq]
+python-dotenv
+playwright
+pymongo
