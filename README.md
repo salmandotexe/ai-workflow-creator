@@ -1,52 +1,56 @@
 # AI-workflow-creator
-Supports creation of AI workflows seamlessly
+Automates Playwright headless browser workflows in parallel, through human language
 
 # Technology
-| Component          | Technology              |
-| ------------------ | ----------------------- |
-| Web Framework      | FastAPI                 |
-| Task queue         | Celery                  |
-| Broker             | RabbitMQ                |
-| Result Backend     | MongoDB                 |
-| Browser Automation | Playwright              |
-| Containerization   | Docker & Docker Compose |
-| Flower             | Celery Task Monitoring Dashboard|
+| Component             | Technology                                |
+| --------------------- | ----------------------------------------- |
+| Web Framework         | FastAPI                                   |
+| Task queue            | Celery                                    |
+| Broker                | RabbitMQ                                  |
+| Result Backend        | MongoDB                                   |
+| Browser Automation    | Playwright                                |
+| Containerization      | Docker & Docker Compose                   |
+| Large Language Model  | OpenAI (GPT 3.5) turbo                    |
+| Flower                | Celery Task Monitoring Dashboard (TODO)   |
+| Logging and metrics   | Grafana (TODO)                            |
 
 # High-Level Architecture
 
-                                      +------------------+
-                                      |   Client (User)  |
-                                      +--------+---------+
-                                               |
-                                               v
-                                      +--------+---------+
-                                      |    FastAPI API   |
-                                      +--------+---------+
-                                               |
-                                               v
-                                      +--------+---------+
-                                      |    RabbitMQ      |
-                                      +--------+---------+
-                                               |
-                           +-------------------+-------------------------+
-                           |                                             |
-                           v                                             v
-                  +--------+---------+                          +--------+---------+
-                  |  Celery Worker    |  <-----> MongoDB        |  Celery Results  |
-                  | (Executes Workflow|       (Results,         |  Backend + Logs  |
-                  |  & Automation)    |      Workflow Logs)     |                  |
-                  +-------------------+                         +------------------+
-                           |
-                           v
-               +-----------+-------------+
-               | Browser Automation Task  |
-               |   (Playwright Headless)  |
-               +-------------------------+
+                                                +------------------+
+                                                |   Client (User)  |
+                                                +--------+---------+
+                                                         |
+                                                         v
+                                                +--------+---------+
+                                                |                  |                +--------------+
+                                                |    FastAPI API   +<-------------->|    OpenAI    |
+                                                |                  |                +--------------+
+                                                +--------+---------+
+                                                         |
+                                                         v
+                                                +--------+---------+
+                                                |    RabbitMQ      |
+                                                +--------+---------+
+                                                         |
+                             +---------------------------+----------------------------+
+                             |                                                        |
+                             v                                                        v
+                  +----------+----------+                                    +--------+---------+
+                  |  Celery Worker      |  <--------->  MongoDB              |  Celery Results  |
+                  | (Executes Workflow  |        ( Results, Workflow Logs    |  Backend + Logs  |
+                  |    & Automation)    |               & State )            |                  |
+                  +---------------------+                                    +------------------+
+                             |
+                             v
+                 +-----------+-------------+
+                 | Browser Automation Task |
+                 |   (Playwright Headless) |
+                 +-------------------------+
 
-                                      +-------------------+
-                                      |     Flower UI     |
-                                      | (Task Monitoring) |
-                                      +-------------------+
+                                                +-------------------+
+                                                |     Flower UI     |
+                                                | (Task Monitoring) |
+                                                +-------------------+
 
 # Installation
 
