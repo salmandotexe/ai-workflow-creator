@@ -4,3 +4,4 @@ celery[py-mongo,rabbitmq]
 python-dotenv
 playwright
 pymongo
+openai
