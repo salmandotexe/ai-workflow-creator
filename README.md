@@ -54,6 +54,13 @@ Supports creation of AI workflows seamlessly
 
 # Example
 
+Endpoint `/api/v1/generate-workflow/` payload:
+
+    {
+        "instruction": "Go to google.com, type youtube in the <textarea class = 'gLFyf'>, click button <input class = 'gNO89b'> then take a screenshot"
+    }
+
+
 Endpoint `/api/v1/run-workflow/` payload:
 
     {
