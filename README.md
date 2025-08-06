@@ -66,21 +66,21 @@ Endpoint `/api/v1/run-workflow/` payload:
     {
         "steps":[
             {
-            "action": "goto",
-            "url": "https://www.google.com"
+                "action": "goto",
+                "url": "https://www.google.com"
             },
             {
-            "action": "type",
-            "selector": "textarea.gLFyf",
-            "value": "youtube"
+                "action": "type",
+                "selector": "textarea.gLFyf",
+                "value": "youtube"
             },
             {
-            "action": "click",
-            "selector": "input.gNO89b"
+                "action": "click",
+                "selector": "input.gNO89b"
             },
             {
-            "action": "screenshot",
-            "path": "screenshot.png"
+                "action": "screenshot",
+                "path": "screenshot.png"
             }
         ]
     }
