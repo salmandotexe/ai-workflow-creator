@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
-from core.llm_client import LLMClient, get_llm_client
-from tasks.workflow_tasks import execute_dynamic_workflow
+from app.core.llm_client import LLMClient, get_llm_client
+from app.tasks.workflow_tasks import execute_dynamic_workflow
 import json
 
 router = APIRouter()

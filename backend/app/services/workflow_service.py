@@ -1,7 +1,7 @@
 from pymongo import MongoClient
-from core.config import settings
-from automation_service import AutomationService
-from constants import MONGODB_WORKFLOW_COLLECTION_NAME, MONGODB_AUTOMATION_LOGS_COLLECTION_NAME
+from app.core.config import settings
+from app.services.automation_service import AutomationService
+from app.constants import MONGODB_WORKFLOW_COLLECTION_NAME, MONGODB_AUTOMATION_LOGS_COLLECTION_NAME
 
 class WorkflowService:
     def __init__(self, automation_service: AutomationService):

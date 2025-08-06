@@ -51,3 +51,29 @@ Supports creation of AI workflows seamlessly
 # Installation
 
 `docker-compose up --build`
+
+# Example
+
+Endpoint `/api/v1/run-workflow/` payload:
+
+    {
+        "steps":[
+            {
+            "action": "goto",
+            "url": "https://www.google.com"
+            },
+            {
+            "action": "type",
+            "selector": "textarea.gLFyf",
+            "value": "youtube"
+            },
+            {
+            "action": "click",
+            "selector": "input.gNO89b"
+            },
+            {
+            "action": "screenshot",
+            "path": "screenshot.png"
+            }
+        ]
+    }

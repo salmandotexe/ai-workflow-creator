@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from api.v1 import workflow
+from app.api.v1 import workflow
 
 app = FastAPI()
 

@@ -1,8 +1,9 @@
 from celery import Celery
-from core.config import settings
-from services.automation_service import AutomationService
-from services.workflow_service import WorkflowService
-from constants import CELERY_WORKFLOW_TASKS_NAME
+from app.core.config import settings
+from app.services.automation_service import AutomationService
+from app.services.workflow_service import WorkflowService
+from app.constants import CELERY_WORKFLOW_TASKS_NAME
+
 celery_app = Celery(
     CELERY_WORKFLOW_TASKS_NAME,
     broker=settings.RABBITMQ_URL,

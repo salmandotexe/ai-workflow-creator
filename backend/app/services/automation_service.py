@@ -1,6 +1,6 @@
 from playwright.sync_api import sync_playwright
 
-DEBUG = True
+DEBUG = False
 
 class AutomationService:
     def __init__(self):
@@ -9,7 +9,7 @@ class AutomationService:
     def execute_steps(self, steps: list):
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=not DEBUG)
-            context = browser.new_context(user_agent="Mozilla/5.0", locale="en-US")
+            context = browser.new_context(user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0", locale="en-US")
             page = context.new_page()
 
             for step in steps:

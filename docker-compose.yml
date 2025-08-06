@@ -15,7 +15,7 @@ services:
   worker:
     build: ./backend
     container_name: celery_worker
-    command: celery -A app.tasks worker --loglevel=info
+    command: celery -A app.tasks.workflow_tasks.celery_app worker --loglevel=info
     env_file:
       - .env
     depends_on:
