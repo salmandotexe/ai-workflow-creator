@@ -11,6 +11,8 @@ services:
     depends_on:
       - rabbitmq
       - mongo
+    volumes:
+      - shared-data:/shared
 
   worker:
     build: ./backend
@@ -21,6 +23,8 @@ services:
     depends_on:
       - rabbitmq
       - mongo
+    volumes:
+      - shared-data:/shared
 
   rabbitmq:
     image: rabbitmq:3-management
