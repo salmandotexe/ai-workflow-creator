@@ -10,9 +10,9 @@ Automates Playwright headless browser workflows in parallel, through human langu
 | Result Backend        | MongoDB                                   |
 | Browser Automation    | Playwright                                |
 | Containerization      | Docker & Docker Compose                   |
-| Large Language Model  | OpenAI (GPT 3.5) turbo                    |
+| Large Language Model  | OpenAI (GPT 3.5 turbo)                    |
 | Logging and metrics   | Grafana + Prometheus                      |
-| Flower                | Task Monitoring Dashboard (disabled)      |
+| Flower                | Task Monitoring Dashboard                 |
 
 # High-Level Architecture
 
@@ -65,7 +65,7 @@ Automates Playwright headless browser workflows in parallel, through human langu
 Endpoint `/api/v1/generate-workflow/` payload:
 
     {
-        "instruction":"go to https://en.wikipedia.org/wiki/FastAPI, wait 1 second, take a screenshot"
+        "instruction": "Go to en.wikipedia.org, type in FastAPI, click on <button class='cdx-button cdx-button--action-default cdx-button--weight-normal cdx-button--size-medium cdx-button--framed cdx-search-input__end-button'>Search</button> . wait 1 second, take a screenshot"
     }
 
 
@@ -73,11 +73,20 @@ Endpoint `/api/v1/generate-workflow/` payload:
 
 
     {
-        "task_id": "b89903a3-c50c-44ab-aa40-b49794c68745",
+    "task_id": "1e80eebf-da7d-408d-8c1a-b456ec98868d",
         "workflow": [
             {
                 "action": "goto",
-                "url": "https://en.wikipedia.org/wiki/FastAPI"
+                "url": "https://en.wikipedia.org"
+            },
+            {
+                "action": "type",
+                "selector": "#searchInput",
+                "value": "FastAPI"
+            },
+            {
+                "action": "click",
+                "selector": ".cdx-button.cdx-button--action-default.cdx-button--weight-normal.cdx-button--size-medium.cdx-button--framed.cdx-search-input__end-button"
             },
             {
                 "action": "wait",

@@ -26,6 +26,21 @@ services:
     volumes:
       - shared-data:/app/app/shared
 
+  flower:
+    image: mher/flower
+    container_name: flower
+    command: >
+      celery --broker=amqp://guest:guest@rabbitmq:5672// flower
+      --port=5555
+      --prometheus-port=8888
+    ports:
+      - "5555:5555"   # Flower UI
+      - "8888:8888"   # Prometheus metrics
+    depends_on:
+      - rabbitmq
+    env_file:
+      - .env
+
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
@@ -52,6 +67,7 @@ services:
       - '--config.file=/etc/prometheus/prometheus.yml'
     depends_on:
       - rabbitmq
+      - flower
 
   grafana:
     image: grafana/grafana
