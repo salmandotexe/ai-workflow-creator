@@ -42,4 +42,5 @@ services:
       - mongo_data:/data/db
 
 volumes:
+  shared-data:
   mongo_data:

@@ -1,6 +1,6 @@
 from openai import OpenAI
 from app.constants import SYSTEM_PROMPT_WORKFLOW_GENERATOR
-from app.core.config import settings
+from app.core.config import get_settings
 from abc import ABC, abstractmethod
 
 class LLMClient(ABC):
@@ -16,26 +16,23 @@ class LLMClient(ABC):
 
 class OpenAIClient(LLMClient):
     """A client for interacting with the OpenAI API."""
-    
-    # 1. Use the correct type hint 'OpenAI' instead of the module 'openai'.
     def __init__(self, system_prompt: str, client: OpenAI = None):
+        # Correctly get settings within the method.
+        settings = get_settings()
         
-        # 2. Modernize client instantiation for openai v1.0+.
-        #    Create a new client if one isn't provided.
+        # Modernize client instantiation for openai v1.0+.
+        # Create a new client if one isn't provided.
         if client is None:
             if not settings.OPENAI_API_KEY:
                 raise ValueError("The OPENAI_API_KEY must be set in your settings.")
             client = OpenAI(api_key=settings.OPENAI_API_KEY)
         
-        # 3. Call the parent constructor.
+        # Call the parent constructor.
         super().__init__(system_prompt=system_prompt, client=client)
 
     def generate_workflow(self, prompt: str) -> str:
         """
         Generates a workflow by calling the OpenAI Chat Completions API.
-        
-        Note: The parameter name was changed from 'message' to 'prompt'
-        to match the base class for consistency.
         """
         response = self.client.chat.completions.create(
             model="gpt-3.5-turbo",
@@ -51,6 +48,6 @@ class OpenAIClient(LLMClient):
 def get_llm_client() -> OpenAIClient:
     """
     Factory function to get a pre-configured OpenAIClient instance.
-    The function is simplified to remove redundant parameters.
+    This is used for FastAPI dependency injection.
     """
     return OpenAIClient(system_prompt=SYSTEM_PROMPT_WORKFLOW_GENERATOR)

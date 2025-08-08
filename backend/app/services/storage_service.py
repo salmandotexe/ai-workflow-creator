@@ -4,7 +4,7 @@ from fastapi import Depends
 from app.core.config import get_settings, Settings
 
 class StorageService: # Later we can refactor this to use S3 by making it a subclass
-    def __init__(self, settings: Settings = Depends(get_settings)):
+    def __init__(self, settings: Settings):
         self.storage_path = settings.STORAGE_DIR
         self.storage_path.mkdir(parents=True, exist_ok=True)
 
@@ -21,9 +21,9 @@ class StorageService: # Later we can refactor this to use S3 by making it a subc
             raise FileNotFoundError(f"{filename} not found")
         return path
 
-def get_storage_service() -> StorageService:
+def get_storage_service(settings: Settings = Depends(get_settings)) -> StorageService:
     """
-    Factory function to get a pre-configured StorageService instance.
-    This function is used to inject the service into FastAPI endpoints.
+    Factory function that creates and returns a StorageService instance.
+    FastAPI will inject the `settings` object here first.
     """
-    return StorageService()
+    return StorageService(settings=settings)
