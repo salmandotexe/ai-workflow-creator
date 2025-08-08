@@ -42,8 +42,8 @@ This project allows you to define **browser automation flows** in plain language
                                         +------------------+
                                         |   Client (User)  |
                                         +--------+---------+
-                                                    |
-                                                    v
+                                                 |
+                                                 v
                                         +--------+---------+
                                         |                  |                +--------------+
                                         |                  +<-------------->|    OpenAI    |
@@ -51,20 +51,20 @@ This project allows you to define **browser automation flows** in plain language
                                         |                  +------------------------------------+
                                         |                  |                                    |
                                         +--------+---------+                                    |
-                                                    |                                           |
-                                                    v                                           |
+                                                 |                                              |
+                                                 v                                              |
                                         +--------+---------+                                    |
                                         |    RabbitMQ      |                                    |
                                         +--------+---------+                                    |
-                                                    |                                           |
-                        +---------------------------+----------------------------+              |
-                        |                                                        |              |
-                        v                                                        v              |
+                                                 |                                              |
+                       +-------------------------+------------------------------+               |
+                       |                                                        |               |
+                       v                                                        v               |
             +----------+----------+                                    +--------+---------+     |
-            |  Celery Worker      |  <--------->  MongoDB              |  Celery Results  |     |
+            |  Celery Worker      |  <----------------------------->   |  Celery Results  |     |
             | (Executes Workflow  |        ( Results, Workflow Logs    |  Backend + Logs  |     |
-            |    & Automation)    |               & State )            +------------------+     |
-            |                     |                                                             |
+            |    & Automation)    |               & State )            |     (MongoDB)    |     |
+            |                     |                                    +------------------+     |
             |                     |-------------------+                                         |
             +---------------------+                   |                                         |
                         |                             |                                         v
@@ -158,7 +158,12 @@ POST `/api/v1/run-workflow/`
 ```json
 {
     "steps": [
-        { "action": "goto", "url": "https://en.wikipedia.org/wiki/FastAPI" },
+        { "action": "goto",  "url": "https://en.wikipedia.org" },
+        { "action": "type", "selector": "#searchInput", "value": "FastAPI"},
+        {
+            "action": "click",
+            "selector": ".cdx-button.cdx-button--action-default.cdx-button--weight-normal.cdx-button--size-medium.cdx-button--framed.cdx-search-input__end-button"
+        },
         { "action": "wait", "value": 1 },
         { "action": "screenshot" }
     ]
