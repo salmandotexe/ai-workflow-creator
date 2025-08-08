@@ -6,3 +6,4 @@ playwright
 pymongo
 openai
 pydantic-settings
+playwright-stealth

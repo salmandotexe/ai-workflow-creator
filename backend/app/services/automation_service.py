@@ -1,36 +1,48 @@
 from playwright.sync_api import sync_playwright
+from playwright_stealth import Stealth
 from app.services.storage_service import StorageService
 from app.core.config import Settings
-from typing import Optional, List
+from typing import List
 
-DEBUG = False
 
 class AutomationService:
     """
-    Uses Playwright to execute a series of browser automation steps.
+    Uses Playwright with stealth mode to execute browser automation steps.
     """
+
     def __init__(self, settings: Settings):
         self.settings = settings
-        # This service now also requires settings to create its own StorageService
-        # when needed, making it independent.
 
     def execute_steps(self, steps: List[dict]) -> List[str]:
         """
         Executes a list of automation steps and returns a list of generated filenames.
         """
-        # The service instantiates its own dependencies internally.
         storage_service = StorageService(settings=self.settings)
         file_names = []
-        
-        is_headless = True 
 
         with sync_playwright() as p:
-            browser = p.chromium.launch(headless=is_headless)
+            browser = p.chromium.launch(headless=True)
+
             context = browser.new_context(
-                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-                locale="en-US"
+                user_agent=(
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                    "AppleWebKit/537.36 (KHTML, like Gecko) "
+                    "Chrome/114.0.5735.90 Safari/537.36"
+                ),
+                locale="en-US",
+                java_script_enabled=True,
+                bypass_csp=True
             )
+
             page = context.new_page()
+
+            # Correct stealth usage
+            stealth = Stealth()
+            stealth.apply_stealth_sync(page)
+
+            # Debug navigator.webdriver
+            print("navigator.webdriver:", page.evaluate("navigator.webdriver"))
+
             try:
                 for step in steps:
                     action = step.get("action")
@@ -45,13 +57,16 @@ class AutomationService:
                         screenshot_filename = storage_service.save_file(screenshot_bytes)
                         file_names.append(screenshot_filename)
                     elif action == "wait":
-                        # Convert seconds to milliseconds
                         page.wait_for_timeout(step["value"] * 1000)
                     elif action == "evaluate":
                         page.evaluate(step["script"])
                     elif action == "wait_for_selector":
                         page.wait_for_selector(step["selector"], timeout=step.get("timeout", 30000))
+                    elif action == "press":
+                        page.press(step["selector"], step["key"])
+            except Exception as e:
+                print(f"Error executing step {step}: {e}")
             finally:
-                # Ensures the browser is closed even if an error occurs.
                 browser.close()
+
         return file_names
