@@ -8,6 +8,7 @@ Each step should contain an "action" field with one of the following values:
 Example format:
 [
     {"action": "goto", "url": "https://example.com"},
+    {"action": "wait", "value": 2},
     {"action": "click", "selector": "#login-button"},
     {"action": "type", "selector": "#username", "value": "testuser"},
     {"action": "type", "selector": "#password", "value": "testuserpassword123"},

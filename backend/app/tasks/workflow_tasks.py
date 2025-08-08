@@ -2,6 +2,8 @@ from celery import Celery
 from app.core.config import settings
 from app.services.automation_service import AutomationService
 from app.services.workflow_service import WorkflowService
+from app.services.storage_service import StorageService
+from typing import Optional
 from app.constants import CELERY_WORKFLOW_TASKS_NAME
 
 celery_app = Celery(
@@ -14,5 +16,5 @@ automation_service = AutomationService()
 workflow_service = WorkflowService(automation_service)
 
 @celery_app.task
-def execute_dynamic_workflow(workflow_definition: dict):
-    workflow_service.execute_and_log_workflow(workflow_definition)
+def execute_dynamic_workflow(workflow_definition: dict, storage_service=Optional[StorageService] = None):
+    return workflow_service.execute_and_log_workflow(workflow_definition, storage_service)
