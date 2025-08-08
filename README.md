@@ -217,6 +217,8 @@ This project is open-source and welcomes contributions of all sizes — from fix
 
     - Add a GitHub Actions workflow for automated testing and deployment.
 
+    - Add a DEBUG flag, when set to true, mock the LLM responses so it can be run without an API key
+
 If you’ve got ideas outside this list — go for it. PRs are welcome!
 
 
