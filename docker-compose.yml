@@ -12,7 +12,7 @@ services:
       - rabbitmq
       - mongo
     volumes:
-      - shared-data:/shared
+      - shared-data:/app/app/shared
 
   worker:
     build: ./backend
@@ -24,7 +24,7 @@ services:
       - rabbitmq
       - mongo
     volumes:
-      - shared-data:/shared
+      - shared-data:/app/app/shared
 
   rabbitmq:
     image: rabbitmq:3-management
