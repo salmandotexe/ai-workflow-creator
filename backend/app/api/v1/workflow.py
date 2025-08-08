@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from app.core.llm_client import LLMClient, get_llm_client
 from app.tasks.workflow_tasks import execute_dynamic_workflow, celery_app
-from app.services.storage_service import StorageService, get_storage_service
+from app.schemas.models import UserInstruction, WorkflowDefinition
 from celery.result import AsyncResult
 import json
 
@@ -9,10 +9,10 @@ router = APIRouter()
 
 @router.post("/generate-workflow/")
 async def generate_and_execute_workflow(
-    user_instruction: dict,
+    user_instruction: UserInstruction,
     llm_client: LLMClient = Depends(get_llm_client)
 ):
-    instruction_text = user_instruction.get("instruction")
+    instruction_text = user_instruction.model_dump().get("instruction")
     if not instruction_text:
         raise HTTPException(status_code=400, detail="Missing instruction text")
 
@@ -29,12 +29,12 @@ async def generate_and_execute_workflow(
 
 
 @router.post("/run-workflow/")
-async def run_workflow(workflow_definition: dict):
+async def run_workflow(workflow_definition: WorkflowDefinition):
     if not workflow_definition.get("steps"):
         raise HTTPException(status_code=400, detail="Invalid Workflow Definition: Missing 'steps'")
 
     # Call the task with only the serializable dictionary.
-    task = execute_dynamic_workflow.delay(workflow_definition)
+    task = execute_dynamic_workflow.delay(workflow_definition.model_dump())
     
     return {"task_id": task.id, "status": "submitted"}
 

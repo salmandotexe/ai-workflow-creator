@@ -11,8 +11,8 @@ Automates Playwright headless browser workflows in parallel, through human langu
 | Browser Automation    | Playwright                                |
 | Containerization      | Docker & Docker Compose                   |
 | Large Language Model  | OpenAI (GPT 3.5) turbo                    |
-| Flower                | Celery Task Monitoring Dashboard (TODO)   |
-| Logging and metrics   | Grafana (TODO)                            |
+| Logging and metrics   | Grafana + Prometheus                      |
+| Flower                | Task Monitoring Dashboard (disabled)      |
 
 # High-Level Architecture
 
@@ -25,29 +25,29 @@ Automates Playwright headless browser workflows in parallel, through human langu
                                                 |                  |                +--------------+
                                                 |                  +<-------------->|    OpenAI    |
                                                 |  FastAPI Server  |                +--------------+
-                                                |                  +--------------------------------------------+
-                                                |                  |                                            |
-                                                +--------+---------+                                            |
-                                                         |                                                      |
-                                                         v                                                      |
-                                                +--------+---------+                                            |
-                                                |    RabbitMQ      |                                            |
-                                                +--------+---------+                                            |
-                                                         |                                                      |
-                             +---------------------------+----------------------------+                         |
-                             |                                                        |                         |
-                             v                                                        v                         |
-                  +----------+----------+                                    +--------+---------+               |
-                  |  Celery Worker      |  <--------->  MongoDB              |  Celery Results  |               |
-                  | (Executes Workflow  |        ( Results, Workflow Logs    |  Backend + Logs  |               |
-                  |    & Automation)    |               & State )            +------------------+               v
-                  |                     |                                                            +----------+-----------------------+
-                  |                     |----------------------------------------------------------->+ Storage Service (Shared volume)  |
-                  +---------------------+                                                            +----------------------------------+
-                             |
-                             v
-                 +-----------+-------------+
-                 | Browser Automation Task |
+                                                |                  +-------------------------------------+
+                                                |                  |                                     |
+                                                +--------+---------+                                     |
+                                                         |                                               |
+                                                         v                                               |
+                                                +--------+---------+                                     |
+                                                |    RabbitMQ      |                                     |
+                                                +--------+---------+                                     |
+                                                         |                                               |
+                             +---------------------------+----------------------------+                  |
+                             |                                                        |                  |
+                             v                                                        v                  |
+                  +----------+----------+                                    +--------+---------+        |
+                  |  Celery Worker      |  <--------->  MongoDB              |  Celery Results  |        |
+                  | (Executes Workflow  |        ( Results, Workflow Logs    |  Backend + Logs  |        |
+                  |    & Automation)    |               & State )            +------------------+        |
+                  |                     |                                                                |
+                  |                     |-------------------+                                            |
+                  +---------------------+                   |                                            |
+                             |                              |                                            v
+                             v                              |                               +------------+------------+
+                 +-----------+-------------+                +------------------------------>+  Shared Storage Volume  |
+                 | Browser Automation Task |                                                +-------------------------+
                  |  (Playwright Headless)  |
                  +-------------------------+
 
@@ -65,9 +65,30 @@ Automates Playwright headless browser workflows in parallel, through human langu
 Endpoint `/api/v1/generate-workflow/` payload:
 
     {
-        "instruction": "Go to google.com, type youtube in the <textarea class = 'gLFyf'>, click button <input class = 'gNO89b'> then take a screenshot"
+        "instruction":"go to https://en.wikipedia.org/wiki/FastAPI, wait 1 second, take a screenshot"
     }
 
+
+# Output:
+
+
+    {
+        "task_id": "b89903a3-c50c-44ab-aa40-b49794c68745",
+        "workflow": [
+            {
+                "action": "goto",
+                "url": "https://en.wikipedia.org/wiki/FastAPI"
+            },
+            {
+                "action": "wait",
+                "value": 1
+            },
+            {
+                "action": "screenshot"
+            }
+        ]
+    }
+<img src="examples/aec934918cc845bfb40a43a42d11b53f.png" alt="alt text" width="800">
 
 Endpoint `/api/v1/run-workflow/` payload:
 
@@ -75,20 +96,14 @@ Endpoint `/api/v1/run-workflow/` payload:
         "steps":[
             {
                 "action": "goto",
-                "url": "https://www.google.com"
+                "url": "https://en.wikipedia.org/wiki/FastAPI"
             },
             {
-                "action": "type",
-                "selector": "textarea.gLFyf",
-                "value": "youtube"
+                "action": "wait",
+                "value": 1
             },
             {
-                "action": "click",
-                "selector": "input.gNO89b"
-            },
-            {
-                "action": "screenshot",
-                "path": "screenshot.png"
+                "action": "screenshot"
             }
         ]
     }

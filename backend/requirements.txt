@@ -7,3 +7,5 @@ pymongo
 openai
 pydantic-settings
 playwright-stealth
+prometheus-fastapi-instrumentator
+flower
