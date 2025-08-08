@@ -27,17 +27,18 @@ Each step must be a JSON object with an "action" field.
 - "evaluate": Execute a snippet of JavaScript. Requires a "script" field.
 
 **Example Task:**
-User Instruction: "Go to google.com, search for 'Playwright framework', and click the search button."
+User Instruction: "Go to google.com, type youtube in the search, click search, wait 1 second, take a screenshot."
 
 **Correct JSON Output:**
 [
     {"action": "goto", "url": "https://www.google.com"},
-    {"action": "wait_for_selector", "selector": "[aria-label='Search']"},
-    {"action": "type", "selector": "[aria-label='Search']", "value": "Playwright framework"},
-    {"action": "click", "selector": "input[type='submit'][aria-label='Google Search']"},
-    {"action": "screenshot"}
+    {"action": "type", "selector": "textarea.gLFyf", "value": "youtube" },
+    {"action": "click", "selector": "input.gNO89b"},
+    {"action": "wait", "value": 1},
+    {"action": "screenshot","path": "screenshot.png"}
 ]
-The User Instruction is as follows: 
+
+**The User Instruction is as follows:** 
 """
 
 MONGODB_WORKFLOW_COLLECTION_NAME: str = "workflow_db"

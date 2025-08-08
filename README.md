@@ -23,34 +23,38 @@ Automates Playwright headless browser workflows in parallel, through human langu
                                                          v
                                                 +--------+---------+
                                                 |                  |                +--------------+
-                                                |    FastAPI API   +<-------------->|    OpenAI    |
-                                                |                  |                +--------------+
-                                                +--------+---------+
-                                                         |
-                                                         v
-                                                +--------+---------+
-                                                |    RabbitMQ      |
-                                                +--------+---------+
-                                                         |
-                             +---------------------------+----------------------------+
-                             |                                                        |
-                             v                                                        v
-                  +----------+----------+                                    +--------+---------+
-                  |  Celery Worker      |  <--------->  MongoDB              |  Celery Results  |
-                  | (Executes Workflow  |        ( Results, Workflow Logs    |  Backend + Logs  |
-                  |    & Automation)    |               & State )            |                  |
-                  +---------------------+                                    +------------------+
+                                                |                  +<-------------->|    OpenAI    |
+                                                |  FastAPI Server  |                +--------------+
+                                                |                  +--------------------------------------------+
+                                                |                  |                                            |
+                                                +--------+---------+                                            |
+                                                         |                                                      |
+                                                         v                                                      |
+                                                +--------+---------+                                            |
+                                                |    RabbitMQ      |                                            |
+                                                +--------+---------+                                            |
+                                                         |                                                      |
+                             +---------------------------+----------------------------+                         |
+                             |                                                        |                         |
+                             v                                                        v                         |
+                  +----------+----------+                                    +--------+---------+               |
+                  |  Celery Worker      |  <--------->  MongoDB              |  Celery Results  |               |
+                  | (Executes Workflow  |        ( Results, Workflow Logs    |  Backend + Logs  |               |
+                  |    & Automation)    |               & State )            +------------------+               v
+                  |                     |                                                            +----------+-----------------------+
+                  |                     |----------------------------------------------------------->+ Storage Service (Shared volume)  |
+                  +---------------------+                                                            +----------------------------------+
                              |
                              v
                  +-----------+-------------+
                  | Browser Automation Task |
-                 |   (Playwright Headless) |
+                 |  (Playwright Headless)  |
                  +-------------------------+
 
-                                                +-------------------+
-                                                |     Flower UI     |
-                                                | (Task Monitoring) |
-                                                +-------------------+
+                    +-------------------+
+                    |     Flower UI     |
+                    | (Task Monitoring) |
+                    +-------------------+
 
 # Installation
 
