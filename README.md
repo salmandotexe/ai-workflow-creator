@@ -29,7 +29,7 @@ This project allows you to define **browser automation flows** in plain language
 | Task Queue            | Celery                                    |
 | Broker                | RabbitMQ                                  |
 | Result Backend        | MongoDB                                   |
-| Browser Automation    | Playwright                                |
+| Browser Automation    | Playwright, Playwright Stealth            |
 | Containerization      | Docker & Docker Compose                   |
 | AI Workflow Parsing   | OpenAI GPT-3.5 Turbo                      |
 | Logging & Metrics     | Grafana + Prometheus                      |
@@ -84,11 +84,12 @@ This project allows you to define **browser automation flows** in plain language
 
 ## 💡 Key Design Decisions
 
-- **RabbitMQ over Redis:** Better durability, delivery guarantees, and routing options for multi-step workflows.
-- **MongoDB for Results:** Flexible schema supports evolving workflow formats without migrations.
-- **StorageService Abstraction:** Enables local shared volume now, but can easily swap in S3 or GCS later.
-- **Playwright for Browser Automation:** Modern, powerful, with ability to simulate real browsers (headers, UA, etc.) to reduce detection.
+- **RabbitMQ over Redis:** Better fault tolerance, and message delivery guarantees
+- **MongoDB for Results:** Flexible schema support and is persistent, used for application state. 
+- **Storage layer Abstraction:** Enables local shared volume now, but can easily swap in S3 or GCS later with change in one place.
+- **Playwright for Browser Automation:** Modern, powerful, with ability to simulate real browsers (headers, UA, etc.) to reduce detection. More flexible than BeautifulSoup / Selenium
 - **Full Observability:** Metrics (Prometheus/Grafana) + Task Monitoring (Flower) = fast debugging and scaling confidence.
+- **Microservice Architecture:** Fully dockerized and scalable.
 
 ---
 
