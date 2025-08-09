@@ -46,7 +46,7 @@ This project allows you to define **browser automation flows** in plain language
                                                  v
                                         +--------+---------+
                                         |                  |                +--------------+
-                                        |                  +<-------------->|    OpenAI    |
+                                        |                  +--------------->|    OpenAI    |
                                         |  FastAPI Server  |                +--------------+
                                         |                  +------------------------------------+
                                         |                  |                                    |
@@ -61,7 +61,7 @@ This project allows you to define **browser automation flows** in plain language
                        |                                                        |               |
                        v                                                        v               |
             +----------+----------+                                    +--------+---------+     |
-            |  Celery Worker      |  <----------------------------->   |  Celery Results  |     |
+            |  Celery Worker      |  ------------------------------>   |  Celery Results  |     |
             | (Executes Workflow  |        ( Results, Workflow Logs    |  Backend + Logs  |     |
             |    & Automation)    |               & State )            |     (MongoDB)    |     |
             |                     |                                    +------------------+     |
